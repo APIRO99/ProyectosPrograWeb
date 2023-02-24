@@ -1,0 +1,40 @@
+@model IEnumerable<admin.Models.Client>
+@{
+  ViewBag.Title = "Clients";
+}
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+  <Table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">
+          Name
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Email
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Edit
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var client in Model)
+      {
+        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+          <td class="px-6 py-4">@client.ClientName</td>
+          <td class="px-6 py-4">@client.ClientEmail</td>
+          <td class="px-6 py-4">
+            @Html.ActionLink("Edit", "Edit", "Clients",client)
+          </td>
+        </tr>
+      }
+    </tbody>
+  </Table>
+</div>
+
+<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+  <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+  <span>Download</span>
+</button>
