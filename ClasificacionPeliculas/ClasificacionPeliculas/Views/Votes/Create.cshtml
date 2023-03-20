@@ -1,0 +1,62 @@
+﻿@model ClasificacionPeliculasModel.Vote
+
+@{
+    ViewData["Title"] = "Agregar Voto";
+}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <form asp-action="Create">
+                    <div class="card-header">@ViewData["Title"]</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12">
+                                    <label class="control-label">Persona</label>
+                                    <select asp-for="PiId" id="persons" class="form-select"
+                                        asp-items="ViewBag.persons" onchange="handleChange(event)"></select>
+                                    <span asp-validation-for="PiId" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12">
+                                    <label class="control-label">Pelicula</label>
+                                    <select asp-for="MoviesId" id="movies" class="form-select"
+                                        asp-items="ViewBag.movies"></select>
+                                    <span asp-validation-for="MoviesId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12">
+                                    <label asp-for="Rate" class="control-label"></label>
+                                    <input asp-for="Rate" class="form-control" type="number" min="0" max="10" step="0.01" />
+                                    <span asp-validation-for="Rate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" value="Crear" class="btn btn-primary" /> <a asp-action="Index"
+                            class="btn btn-danger">Regresar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script>
+            async function handleChange({ target }) {
+                let personID = target.value;
+                var response = await fetch("http://localhost:5224/Votes/GetUnvotedMovies?personID=" + personID);
+                var movies = await response.json();
+                var opts = movies.reduce((acc, next) => acc + `,<option value=${next.id}>${next.title}</option>`, `<option value='' selected>Select from List...</option>`);
+                document.getElementById("movies").innerHTML = opts;
+            }
+        </script>
+    }
+}
