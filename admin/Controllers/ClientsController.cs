@@ -21,15 +21,36 @@ public class ClientsController : Controller
   }
 
 
-  public IActionResult Edit(Client client)
+  public IActionResult Form(Client client)
   {
+    if (client == null) ViewBag.method = "CreateClient";
+    else ViewBag.method = "UpdateClient";
     return View(client);
   }
 
+  public IActionResult CreateClient()
+  {
+    ViewBag.method = "CreateClient";
+    return View("Form", null);
+  }
+
   [HttpPost]
-  public IActionResult PostClient(Client client)
+  public IActionResult CreateClient(Client client)
+  {
+    mysql.createClient(client);
+    return View("Index", mysql.getClients());
+  }
+
+  [HttpPost]
+  public IActionResult UpdateClient(Client client)
   {
     mysql.updateClient(client);
+    return View("Index", mysql.getClients());
+  }
+
+  public IActionResult DeleteClient(Client client)
+  {
+    mysql.deleteClient(client.ClientId);
     return View("Index", mysql.getClients());
   }
 

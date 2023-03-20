@@ -21,7 +21,9 @@ public class ECHOMECHANICALMYSQL : IDatabase
 
   public bool createClient(Client client)
   {
-    throw new NotImplementedException();
+    dbContext.Clients.Add(client);
+    dbContext.SaveChanges();
+    return true;
   }
 
   public bool updateClient(Client client)
@@ -37,14 +39,17 @@ public class ECHOMECHANICALMYSQL : IDatabase
     return false;
   }
 
-  public bool deleteClient(Client client)
+  public bool deleteClient(int clientID)
   {
-    throw new NotImplementedException();
+    Client client = (Client)dbContext.Clients.Where(b => b.ClientId == clientID).FirstOrDefault();
+    if (client != null) dbContext.Clients.Remove(client);
+    dbContext.SaveChanges();
+    return true;
   }
 
 
 
-  // SERVICE ============================================
+  // SERVICE ============================================a
   // ====================================================
   public List<Service> getServices()
   {
@@ -61,7 +66,7 @@ public class ECHOMECHANICALMYSQL : IDatabase
     throw new NotImplementedException();
   }
 
-  public bool deleteService(Service service)
+  public bool deleteService(int serviceID)
   {
     throw new NotImplementedException();
   }
@@ -85,7 +90,7 @@ public class ECHOMECHANICALMYSQL : IDatabase
     throw new NotImplementedException();
   }
 
-  public bool deleteTestimonial(Testimonial testimonial)
+  public bool deleteTestimonial(int testimonialID)
   {
     throw new NotImplementedException();
   }
