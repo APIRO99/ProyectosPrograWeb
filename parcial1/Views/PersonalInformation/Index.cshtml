@@ -1,0 +1,43 @@
+@model IEnumerable<parcial1.Models.PersonalInformation>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+  <Table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">Name</th>
+        <th scope="col" class="px-6 py-3">DateOfBirth</th>
+        <th scope="col" class="px-6 py-3">Email</th>
+        <th scope="col" class="px-6 py-3">PhoneNumber</th>
+        <th scope="col" class="px-6 py-3">Address</th>
+        <th scope="col" class="px-6 py-3">Edit</th>
+        <th scope="col" class="px-6 py-3">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var pi in Model)
+      {
+        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+          <td class="px-6 py-4">@pi.Name</td>
+          <td class="px-6 py-4">@pi.DateOfBirth</td>
+          <td class="px-6 py-4">@pi.Email</td>
+          <td class="px-6 py-4">@pi.PhoneNumber</td>
+          <td class="px-6 py-4">@pi.Address</td>
+          <td class="px-6 py-4">
+            @Html.ActionLink("Edit", "UpdatePersonalInformation", "PersonalInformation", pi)
+          </td>
+          <td class="px-6 py-4">
+            @Html.ActionLink("Delete", "DeletePersonalInformation", "PersonalInformation", pi)
+          </td>
+        </tr>
+      }
+    </tbody>
+  </Table>
+</div>
+
+
+<a href='@Url.Action("CreatePersonalInformation", "PersonalInformation")'>
+  <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center mt-4">
+    <span>Add Personal Information</span>
+  </button>
+</a>

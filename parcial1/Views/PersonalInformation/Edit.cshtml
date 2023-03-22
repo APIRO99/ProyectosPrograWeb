@@ -1,0 +1,75 @@
+@model parcial1.Models.PersonalInformation
+
+@using (Html.BeginForm((string)ViewBag.actionType, "PersonalInformation", FormMethod.Post))
+{
+  @Html.TextBoxFor(x => x.Id, new { @hidden=true })
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Name
+      </label>
+      @Html.TextBoxFor(x => x.Name, new { 
+        @class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white",
+        @id="grid-first-name",
+        @type="text",
+        placeholder="Jane" 
+      })
+    </div>
+  </div>
+    <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        DateOfBirth
+      </label>
+      @Html.TextBoxFor(x => x.DateOfBirth, new { 
+        @class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white",
+        @id="grid-first-name",
+        @type="datetime",
+        placeholder="Jane" 
+      })
+    </div>
+  </div>
+    <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Email
+      </label>
+      @Html.TextBoxFor(x => x.Email, new { 
+        @class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white",
+        @id="grid-first-name",
+        @type="text",
+        placeholder="Jane" 
+      })
+    </div>
+  </div>
+    <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        PhoneNumber
+      </label>
+      @Html.TextBoxFor(x => x.PhoneNumber, new { 
+        @class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white",
+        @id="grid-first-name",
+        @type="text",
+        placeholder="Jane" 
+      })
+    </div>
+  </div>
+    <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Address
+      </label>
+      @Html.TextBoxFor(x => x.Address, new { 
+        @class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white",
+        @id="grid-first-name",
+        @type="text",
+        placeholder="Jane" 
+      })
+    </div>
+  </div>
+  <button type="submit"
+    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+    <span>Actualizar</span>
+  </button>
+}
