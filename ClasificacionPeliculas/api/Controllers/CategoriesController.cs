@@ -30,7 +30,7 @@ public class CategoriesController : ControllerBase
   [HttpGet("{id}")]
   public ActionResult<Category> GetCategory(int id)
   {
-    Category? updatedCategory = db.Delete(id);
+    Category? updatedCategory = db.GetOne(id);
     if (updatedCategory == null) return NotFound();
     else return updatedCategory;
   }

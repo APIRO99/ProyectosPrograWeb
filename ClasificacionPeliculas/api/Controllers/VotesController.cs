@@ -30,7 +30,7 @@ public class VoteController : ControllerBase
   [HttpGet("{id}")]
   public ActionResult<Vote> GetVote(int id)
   {
-    Vote? updatedVote = db.Delete(id);
+    Vote? updatedVote = db.GetOne(id);
     if (updatedVote == null) return NotFound();
     else return updatedVote;
   }

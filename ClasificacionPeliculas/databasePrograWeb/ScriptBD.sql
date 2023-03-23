@@ -529,7 +529,7 @@ CREATE TABLE personal_information (
    phone_number VARCHAR(20) NOT NULL,
    address VARCHAR(255),
    PRIMARY KEY (id),
-	CONSTRAINT `FK_GEONAMEIDCITY_WCITY_personal_information` FOREIGN KEY (`geonameidCity`) REFERENCES `city` (`geonameid`) ON DELETE SET NULL
+	CONSTRAINT `FK_GEONAMEIDCITY_WCITY_personal_information` FOREIGN KEY (`geonameidCity`) REFERENCES `city` (`geonameid`) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS `votes`;

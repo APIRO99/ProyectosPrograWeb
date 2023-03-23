@@ -30,7 +30,7 @@ public class PersonalInformationController : ControllerBase
   [HttpGet("{id}")]
   public ActionResult<PersonalInformation> GetPersonalInformation(int id)
   {
-    PersonalInformation? updatedPersonalInformation = db.Delete(id);
+    PersonalInformation? updatedPersonalInformation = db.GetOne(id);
     if (updatedPersonalInformation == null) return NotFound();
     else return updatedPersonalInformation;
   }
