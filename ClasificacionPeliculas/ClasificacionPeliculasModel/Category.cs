@@ -9,5 +9,5 @@ public partial class Category
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Moviescategory> Moviescategories { get; } = new List<Moviescategory>();
+    public virtual ICollection<Moviescategory> Moviescategories { get; set; } = null;
 }

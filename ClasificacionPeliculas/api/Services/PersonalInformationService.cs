@@ -30,12 +30,44 @@ public class PersonalInformationService : IDatabaseService<PersonalInformation, 
 
   public List<PersonalInformation> GetAll()
   {
-    return dbContext.PersonalInformations.ToList();
+    return (from pi in dbContext.PersonalInformations
+            join c in dbContext.Cities on pi.GeonameidCity equals c.Geonameid
+            select new PersonalInformation
+            {
+              Id = pi.Id,
+              Name = pi.Name,
+              DateOfBirth = pi.DateOfBirth,
+              Email = pi.Email,
+              PhoneNumber = pi.PhoneNumber,
+              Address = pi.Address,
+              GeonameidCity = pi.GeonameidCity,
+              GeonameidCityNavigation = new City()
+              {
+                Name = c.Name
+              }
+            }).ToList();
   }
 
   public PersonalInformation? GetOne(int id)
   {
-    return dbContext.PersonalInformations.FirstOrDefault(s => s.Id == id);
+    return (from pi in dbContext.PersonalInformations
+            join c in dbContext.Cities on pi.GeonameidCity equals c.Geonameid
+            where pi.Id == id
+            select new PersonalInformation
+            {
+              Id = pi.Id,
+              Name = pi.Name,
+              DateOfBirth = pi.DateOfBirth,
+              Email = pi.Email,
+              PhoneNumber = pi.PhoneNumber,
+              Address = pi.Address,
+              GeonameidCity = pi.GeonameidCity,
+              GeonameidCityNavigation = new City()
+              {
+                Name = c.Name,
+                GeonameidRegion = c.GeonameidRegion
+              }
+            }).FirstOrDefault();
   }
 
   public PersonalInformation? Update(PersonalInformation entity)

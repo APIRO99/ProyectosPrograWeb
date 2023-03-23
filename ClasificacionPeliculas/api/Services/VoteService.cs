@@ -90,8 +90,8 @@ public class VoteService : IDatabaseService<Vote, int>
     vote.Rate = entity.Rate;
     dbContext.Votes.Update(vote);
     dbContext.SaveChanges();
-    vote.Movies.VotesNavigation = null;
-    vote.Pi.Votes = null;
+    if (vote.Movies != null) vote.Movies.VotesNavigation = null;
+    if (vote.Pi != null) vote.Pi.Votes = null;
     return vote;
   }
 }

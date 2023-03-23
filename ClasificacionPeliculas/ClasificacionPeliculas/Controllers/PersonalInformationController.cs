@@ -10,43 +10,32 @@ namespace ClasificacionPeliculas.Controllers
   public class PersonalInformationController : Controller
   {
     private readonly MoviesContext _context;
+    private readonly IPersonalInformationsService ps;
 
-    public PersonalInformationController()
+    public PersonalInformationController(IPersonalInformationsService ps)
     {
+      this.ps = ps;
       _context = new MoviesContext();
     }
 
     // GET: PersonalInformations
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      IEnumerable<PersonalInformation> _personalInformations =
-          (from pi in _context.PersonalInformations
-           join c in _context.Cities on pi.GeonameidCity equals c.Geonameid
-           select new PersonalInformation
-           {
-             Id = pi.Id,
-             Name = pi.Name,
-             DateOfBirth = pi.DateOfBirth,
-             Email = pi.Email,
-             PhoneNumber = pi.PhoneNumber,
-             Address = pi.Address,
-             GeonameidCity = pi.GeonameidCity,
-             GeonameidCityNavigation = c
-           }).ToList();
+      IEnumerable<PersonalInformation> _personalInformations = await ps.GetPersonalInformations();
       return View(_personalInformations);
     }
 
     // GET: PersonalInformation/Details/5
-    public IActionResult Details(int? id)
+    public async Task<IActionResult> Details(int? id)
     {
       if (id == null || _context.PersonalInformations == null) return NotFound();
-      var personalInformations = GetPersonalInformationWithCity(id);
+      var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
       return View(personalInformations);
     }
 
     // GET: PersonalInformation/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
       List<Region> regions = GetRegions();
       List<City> cities = (List<City>)GetCitiesFromRegion(regions[0].Geonameid).Value;
@@ -63,27 +52,23 @@ namespace ClasificacionPeliculas.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Name,DateOfBirth,Email,PhoneNumber,Address,GeonameidCity")] PersonalInformation PersonalInformation)
     {
-      if (ModelState.IsValid)
-      {
-        _context.Add(PersonalInformation);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-      }
-      return View(PersonalInformation);
+      if (!ModelState.IsValid) return View(PersonalInformation);
+      await ps.CreatePersonalInformation(PersonalInformation);
+      return RedirectToAction(nameof(Index));
     }
 
     // GET: PersonalInformation/Edit/5
-    public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
       if (id == null || _context.PersonalInformations == null) return NotFound();
-      var personalInformations = GetPersonalInformationWithCity(id);
+      var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
 
       List<Region> regions = GetRegions();
       SelectList regionsList = new SelectList(regions, "Geonameid", "Name", regions.Select(s => s.Geonameid).FirstOrDefault());
       regionsList.Where(x => x.Value == personalInformations.GeonameidCityNavigation.GeonameidRegion.ToString()).First().Selected = true;
       ViewBag.regions = regionsList;
-      
+
       List<City> cities = (List<City>)GetCitiesFromRegion(personalInformations.GeonameidCityNavigation.GeonameidRegion).Value;
       ViewBag.cities = new SelectList(cities, "Geonameid", "Name", cities.Select(s => s.Geonameid).FirstOrDefault());
 
@@ -97,24 +82,15 @@ namespace ClasificacionPeliculas.Controllers
     {
       if (id != PersonalInformation.Id) return NotFound();
       if (!ModelState.IsValid) View(PersonalInformation);
-      try
-      {
-        _context.Update(PersonalInformation);
-        await _context.SaveChangesAsync();
-      }
-      catch (DbUpdateConcurrencyException)
-      {
-        if (!MovieExists(PersonalInformation.Id)) return NotFound();
-        else throw;
-      }
+      await ps.UpdatePersonalInformation(PersonalInformation);
       return RedirectToAction(nameof(Index));
     }
 
     // GET: PersonalInformation/Delete/5
-    public IActionResult Delete(int? id)
+    public async Task<IActionResult> Delete(int? id)
     {
       if (id == null || _context.PersonalInformations == null) return NotFound();
-      var personalInformations = GetPersonalInformationWithCity(id);
+      var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
       return View(personalInformations);
     }
@@ -133,11 +109,6 @@ namespace ClasificacionPeliculas.Controllers
       return RedirectToAction(nameof(Index));
     }
 
-    private bool MovieExists(int id)
-    {
-      return (_context.PersonalInformations?.Any(e => e.Id == id)).GetValueOrDefault();
-    }
-
     private List<Region> GetRegions()
     {
       return (
@@ -152,23 +123,10 @@ namespace ClasificacionPeliculas.Controllers
       .ToList();
     }
 
-    private PersonalInformation GetPersonalInformationWithCity(int? id)
+    private async Task<PersonalInformation> GetPersonalInformationWithCity(int? id)
     {
       if (id == null) return null;
-      return (from pi in _context.PersonalInformations
-              join c in _context.Cities on pi.GeonameidCity equals c.Geonameid
-              where pi.Id == id
-              select new PersonalInformation
-              {
-                Id = pi.Id,
-                Name = pi.Name,
-                DateOfBirth = pi.DateOfBirth,
-                Email = pi.Email,
-                PhoneNumber = pi.PhoneNumber,
-                Address = pi.Address,
-                GeonameidCity = pi.GeonameidCity,
-                GeonameidCityNavigation = c
-              }).FirstOrDefault();
+      return await ps.GetPersonalInformation((int)id);
     }
 
     // AUX ------------------------------------------------------------------------

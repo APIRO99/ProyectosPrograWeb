@@ -6,76 +6,46 @@ namespace ClasificacionPeliculas.Controllers
 {
     public class CategoriesController : Controller
     {
-        public IActionResult Index()
+        private readonly ICategoriesService cs;
+
+        public CategoriesController(ICategoriesService cs) {
+            this.cs = cs;
+        }
+
+        public async Task<ActionResult> Index()
         {
-            MoviesContext _moviesContext = new MoviesContext();
-            IEnumerable<Category> categories = (from c in _moviesContext.Categories
-                                                //join mc in _moviesContext.Moviescategories on c.Id equals mc.CategoryId
-                                                //where c.Id == 0
-                                                select new Category { Id = c.Id, Name = c.Name}).OrderBy(s => s.Name).ToList();
+            IEnumerable<Category> categories = await cs.GetCategories();
             return View(categories);
         }
         [HttpGet]
-        public IActionResult Create()
+        public ActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Create(string Name)
+        public async Task<ActionResult> Create(string Name)
         {
-            MoviesContext _moviesContext = new MoviesContext();
-            Category category = new Category
-            {
-                Name = Name
-            };
-            _moviesContext.Categories.Add(category);
-            _moviesContext.SaveChanges();
-            Category categoryResult = new Category
-            {
-                Name = Name,
-                Id = category.Id
-            };
-            ViewBag.Resultado = true;
-            return View(categoryResult);
+            Category category = new Category() { Name = Name };
+            await cs.CreateCategory(category);
+             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            MoviesContext _moviesContext = new MoviesContext();
-            Category category = _moviesContext.Categories.FirstOrDefault(s => s.Id == id);
-            Category categoryResult = new Category
-            {
-                Id = category.Id,
-                Name = category.Name,
-            };
-            return View(categoryResult);
+            Category category = await cs.GetCategory(id);
+            return View(category);
         }
         [HttpPost]
-        public IActionResult Edit(int id, string Name)
+        public async Task<ActionResult> Edit(int id, string Name)
         {
-            MoviesContext _moviesContext = new MoviesContext();
-            Category category = _moviesContext.Categories.FirstOrDefault(s => s.Id == id);
-            category.Name = Name;
-            _moviesContext.Categories.Update(category);
-            _moviesContext.SaveChanges();
-            Category categoryResult = new Category
-            {
-                Name = Name,
-                Id = category.Id
-            };
-            ViewBag.Resultado = true;
-            return View(categoryResult);
+            Category category = new Category() { Id = id, Name = Name };
+            await cs.UpdateCategory(category);
+             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
-        public IActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            MoviesContext _moviesContext = new MoviesContext();
-            Category category = _moviesContext.Categories.FirstOrDefault(s => s.Id == id);
-            Category categoryResult = new Category
-            {
-                Id = category.Id,
-                Name = category.Name,
-            };
+            Category categoryResult = await cs.GetCategory(id);
             return View(categoryResult);
         }
     }
