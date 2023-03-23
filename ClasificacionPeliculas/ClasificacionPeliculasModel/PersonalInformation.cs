@@ -21,5 +21,5 @@ public partial class PersonalInformation
 
     public virtual City GeonameidCityNavigation { get; set; } = null!;
 
-    public virtual ICollection<Vote> Votes { get; } = new List<Vote>();
+    public virtual ICollection<Vote> Votes { get; set; } = null;
 }

@@ -26,17 +26,59 @@ public class VoteService : IDatabaseService<Vote, int>
     if (vote == null) return null;
     dbContext.Votes.Remove(vote);
     dbContext.SaveChanges();
+    if (vote.Movies != null) vote.Movies.VotesNavigation = null;
+    if (vote.Pi != null) vote.Pi.Votes = null;
     return vote;
   }
 
   public List<Vote> GetAll()
   {
-    return dbContext.Votes.ToList();
+    List<Vote> votes = (from v in dbContext.Votes
+                        join pi in dbContext.PersonalInformations on v.PiId equals pi.Id
+                        join mo in dbContext.Movies on v.MoviesId equals mo.Id
+                        select new Vote
+                        {
+                          Id = v.Id,
+                          PiId = v.PiId,
+                          MoviesId = v.MoviesId,
+                          Rate = v.Rate,
+                          RowCreationTime = v.RowCreationTime,
+                          Movies = new Movie()
+                          {
+                            Title = mo.Title,
+
+                          },
+                          Pi = new PersonalInformation()
+                          {
+                            Name = pi.Name
+                          }
+                        }).ToList();
+    return votes;
   }
 
   public Vote? GetOne(int id)
   {
-    return dbContext.Votes.FirstOrDefault(s => s.Id == id);
+    return
+    (from v in dbContext.Votes
+     join pi in dbContext.PersonalInformations on v.PiId equals pi.Id
+     join mo in dbContext.Movies on v.MoviesId equals mo.Id
+     where v.Id == id
+     select new Vote
+     {
+       Id = v.Id,
+       PiId = v.PiId,
+       MoviesId = v.MoviesId,
+       Rate = v.Rate,
+       RowCreationTime = v.RowCreationTime,
+       Movies = new Movie()
+       {
+         Title = mo.Title,
+       },
+       Pi = new PersonalInformation()
+       {
+         Name = pi.Name
+       }
+     }).FirstOrDefault();
   }
 
   public Vote? Update(Vote entity)
@@ -48,6 +90,8 @@ public class VoteService : IDatabaseService<Vote, int>
     vote.Rate = entity.Rate;
     dbContext.Votes.Update(vote);
     dbContext.SaveChanges();
+    vote.Movies.VotesNavigation = null;
+    vote.Pi.Votes = null;
     return vote;
   }
 }
