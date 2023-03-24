@@ -35,6 +35,14 @@ public class MoviesController : ControllerBase
     else return updatedMovie;
   }
 
+  [HttpGet("unvoted/{personId}")]
+  public ActionResult<List<Movie>> GetUnvotedMovie(int personId)
+  {
+    List<Movie> updatedMovie = db.getUnvotedMovie(personId);
+    if (updatedMovie == null) return NotFound();
+    else return updatedMovie;
+  }
+
   [HttpPut("update")]
   public ActionResult<Movie> UpdateMovie(Movie body)
   {

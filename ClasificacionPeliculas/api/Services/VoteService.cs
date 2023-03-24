@@ -73,10 +73,12 @@ public class VoteService : IDatabaseService<Vote, int>
        Movies = new Movie()
        {
          Title = mo.Title,
+         Id = mo.Id
        },
        Pi = new PersonalInformation()
        {
-         Name = pi.Name
+         Name = pi.Name,
+         Id = pi.Id
        }
      }).FirstOrDefault();
   }

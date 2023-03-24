@@ -282,21 +282,19 @@ public partial class MoviesContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.MoviesId).HasColumnName("movies_id");
             entity.Property(e => e.PiId).HasColumnName("pi_id");
+            entity.Property(e => e.Rate)
+                .HasPrecision(4)
+                .HasColumnName("rate");
             entity.Property(e => e.RowCreationTime)
                 .HasColumnType("datetime")
                 .HasColumnName("row_creation_time");
-            entity.Property(e => e.Rate)
-                .HasPrecision(4, 2)
-                .HasColumnName("rate");
 
             entity.HasOne(d => d.Movies).WithMany(p => p.VotesNavigation)
                 .HasForeignKey(d => d.MoviesId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_movies_votes");
 
             entity.HasOne(d => d.Pi).WithMany(p => p.Votes)
                 .HasForeignKey(d => d.PiId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PI_VOTES");
         });
 

@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ClasificacionPeliculas.Context;
 using ClasificacionPeliculasModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.Json;
 
 namespace ClasificacionPeliculas.Controllers
 {
   public class VotesController : Controller
   {
     private readonly IVotesService vs;
+    private readonly IPersonalInformationsService ps;
+    private readonly IMoviesService ms;
 
-    private readonly MoviesContext _context;
-
-    public VotesController(IVotesService vs)
+    public VotesController(IVotesService vs, IPersonalInformationsService ps, IMoviesService ms)
     {
-      _context = new MoviesContext();
       this.vs = vs;
+      this.ps = ps;
+      this.ms = ms;
     }
 
     // GET: Votess
@@ -29,19 +28,18 @@ namespace ClasificacionPeliculas.Controllers
     // GET: Vote/Details/5
     public async Task<IActionResult> Details(int? id)
     {
-      if (id == null || _context.Votes == null) return NotFound();
       var vote = await vs.GetVoto((int)id);
       if (vote == null) return NotFound();
       return View(vote);
     }
 
     // GET: Vote/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-      List<PersonalInformation> persons = GetPersons();
+      List<PersonalInformation> persons = await GetPersons();
       ViewBag.persons = new SelectList(persons, "Id", "Name", persons.Select(s => s.Id).FirstOrDefault());
 
-      List<Movie> cities = (List<Movie>)GetUnvotedMovies(persons[0].Id).Value;
+      List<Movie> cities = (List<Movie>) (await GetUnvotedMovies(persons[0].Id)).Value;
       ViewBag.movies = new SelectList(cities, "Id", "Title", cities.Select(s => s.Id).FirstOrDefault());
       return View();
     }
@@ -62,16 +60,15 @@ namespace ClasificacionPeliculas.Controllers
     // GET: Vote/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
-      if (id == null || _context.Votes == null) return NotFound();
       var vote = await vs.GetVoto((int)id);
       if (vote == null) return NotFound();
 
-      List<PersonalInformation> persons = GetPersons();
+      List<PersonalInformation> persons = await GetPersons();
       SelectList personsList = new SelectList(persons, "Id", "Name", persons.Select(s => s.Id).FirstOrDefault());
       personsList.Where(x => x.Value == vote.PiId.ToString()).First().Selected = true;
       ViewBag.persons = personsList;
 
-      List<Movie> movies = (List<Movie>)GetUnvotedMovies(vote.Pi.Id).Value;
+      List<Movie> movies = (List<Movie>) (await GetUnvotedMovies(vote.Pi.Id)).Value;
       movies.Insert(0, vote.Movies);
       ViewBag.movies = new SelectList(movies, "Id", "Title", movies.Select(s => s.Id).FirstOrDefault());
 
@@ -96,7 +93,6 @@ namespace ClasificacionPeliculas.Controllers
     // GET: Vote/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
-      if (id == null || _context.Votes == null) return NotFound();
       var votes = await vs.GetVoto((int)id);
       if (votes == null) return NotFound();
       return View(votes);
@@ -107,44 +103,20 @@ namespace ClasificacionPeliculas.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-      if (_context.Votes == null) return Problem("Entity set 'MoviesContext.Votes'  is null.");
-
       await vs.DeleteVoto(id);
       return RedirectToAction(nameof(Index));
     }
 
-    private List<PersonalInformation> GetPersons()
+    private async Task<List<PersonalInformation>> GetPersons()
     {
-      return (
-        from p in _context.PersonalInformations
-        select new PersonalInformation
-        {
-          Id = p.Id,
-          Name = p.Name
-        }
-      )
-      .OrderBy(r => r.Name)
-      .ToList();
+      return (await ps.GetPersonalInformations()).ToList();
     }
 
     // AUX ------------------------------------------------------------------------
 
-    public JsonResult GetUnvotedMovies(long personID)
+    public async Task<JsonResult> GetUnvotedMovies(long personID)
     {
-      var votedMovies = _context.Votes.Where(x => x.PiId == personID).Select(x => x.MoviesId).ToArray();
-
-      List<Movie> unvotedMovies = (
-        from m in _context.Movies
-        where !votedMovies.Contains(m.Id)
-        select new Movie
-        {
-          Id = m.Id,
-          Title = m.Title
-        }
-      )
-      .OrderBy(r => r.Title)
-      .ToList();
-      return Json(unvotedMovies);
+      return Json(await ms.GetUnvotedMovie((int)personID));
     }
   }
 }

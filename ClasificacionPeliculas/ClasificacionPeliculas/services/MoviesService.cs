@@ -6,6 +6,7 @@ public interface IMoviesService
 {
   public Task<IEnumerable<Movie>> GetMovies();
   public Task<Movie> GetMovie(int id);
+  public Task<IEnumerable<Movie>> GetUnvotedMovie(int id);
   public Task<Movie> CreateMovie(Movie Movie);
   public Task<Movie> UpdateMovie(Movie Movie);
   public Task<Movie> DeleteMovie(int id);
@@ -51,6 +52,15 @@ public class MoviesService : IMoviesService
     var response = await client.GetAsync("http://localhost:5096/Movies/" + id);
     var content = await response.Content.ReadAsStringAsync();
     Movie Movie = JsonConvert.DeserializeObject<Movie>(content);
+    return Movie;
+  }
+
+  public async Task<IEnumerable<Movie>> GetUnvotedMovie(int id)
+  {
+    var client = new HttpClient();
+    var response = await client.GetAsync("http://localhost:5096/Movies/unvoted/" + id);
+    var content = await response.Content.ReadAsStringAsync();
+    IEnumerable<Movie> Movie = JsonConvert.DeserializeObject<IEnumerable<Movie>>(content);
     return Movie;
   }
 

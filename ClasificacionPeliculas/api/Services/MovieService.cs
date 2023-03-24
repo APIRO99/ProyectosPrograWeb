@@ -4,9 +4,8 @@ using ClasificacionPeliculasModel;
 
 namespace api.Services;
 
-public interface IMoviesService : IDatabaseService<Movie, int>
-{
-
+public interface IMoviesService : IDatabaseService<Movie, int> {
+  public List<Movie> getUnvotedMovie(int personID);
 }
 
 public class MovieService : IMoviesService
@@ -82,6 +81,22 @@ public class MovieService : IMoviesService
     movie.Votes = votes.Count();
     movie.Rating = (movie.Votes > 0) ? (decimal)votes.Select(x => x.Rate).Average() : 0;
     return movie;
+  }
+
+  public List<Movie> getUnvotedMovie(int personID)
+  {
+    var votedMovies = dbContext.Votes.Where(x => x.PiId == personID).Select(x => x.MoviesId).ToArray();
+    return (
+        from m in dbContext.Movies
+        where !votedMovies.Contains(m.Id)
+        select new Movie
+        {
+          Id = m.Id,
+          Title = m.Title
+        }
+      )
+      .OrderBy(r => r.Title)
+      .ToList();
   }
 
   public Movie? Update(Movie entity)

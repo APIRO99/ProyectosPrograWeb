@@ -88,9 +88,6 @@ namespace ClasificacionPeliculas.Controllers
       return Json(new { movie = await getMoviesWithVotes((int)movieId) });
     }
 
-
-
-
     // Helpers 
     private async Task<Movie> getMoviesWithVotes(int id)
     {
