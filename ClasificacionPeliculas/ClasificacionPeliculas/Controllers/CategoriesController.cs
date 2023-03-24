@@ -1,5 +1,4 @@
-﻿using ClasificacionPeliculas.Context;
-using ClasificacionPeliculasModel;
+﻿using ClasificacionPeliculasModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClasificacionPeliculas.Controllers

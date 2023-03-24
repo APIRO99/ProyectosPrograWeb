@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ClasificacionPeliculas.Context;
 using ClasificacionPeliculasModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.Json;
 
 namespace ClasificacionPeliculas.Controllers
 {

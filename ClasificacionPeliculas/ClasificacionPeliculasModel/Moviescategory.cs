@@ -13,7 +13,10 @@ public partial class Moviescategory
 
   public int CategoryId { get; set; }
 
+  [NotMapped]
   public string MovieName { get; set; } = null;
+  
+  [NotMapped]
   public string CategoryName { get; set; } = null;
 
   public virtual Category Category { get; set; } = null!;

@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICategoriesService, CategoriesService>();
+builder.Services.AddSingleton<IMoviescategoriesService, MoviescategoriesService>();
 builder.Services.AddSingleton<IMoviesService, MoviesService>();
 builder.Services.AddSingleton<IPersonalInformationsService, PersonalInformationsService>();
 builder.Services.AddSingleton<IVotesService, VotesService>();
