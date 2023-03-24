@@ -8,8 +8,8 @@ namespace api.Controllers;
 [Route("[controller]")]
 public class MoviesController : ControllerBase
 {
-  private IDatabaseService<Movie, int> db;
-  public MoviesController(IDatabaseService<Movie, int> _db)
+  private IMoviesService db;
+  public MoviesController(IMoviesService _db)
   {
     this.db = _db;
   }

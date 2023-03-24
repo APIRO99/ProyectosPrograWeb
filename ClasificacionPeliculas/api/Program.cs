@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDatabaseService<Category, int>>(s => new CategoryService(new MoviesContext()));
 builder.Services.AddSingleton<IDatabaseService<PersonalInformation, int>>(s => new PersonalInformationService(new MoviesContext()));
 builder.Services.AddSingleton<IDatabaseService<Vote, int>>(s => new VoteService(new MoviesContext()));
-builder.Services.AddSingleton<IDatabaseService<Movie, int>>(s => new MovieService(new MoviesContext()));
+builder.Services.AddSingleton<IMoviesService>(s => new MovieService(new MoviesContext()));
 
 var app = builder.Build();
 

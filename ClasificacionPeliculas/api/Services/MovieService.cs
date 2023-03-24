@@ -4,7 +4,12 @@ using ClasificacionPeliculasModel;
 
 namespace api.Services;
 
-public class MovieService : IDatabaseService<Movie, int>
+public interface IMoviesService : IDatabaseService<Movie, int>
+{
+
+}
+
+public class MovieService : IMoviesService
 {
   private MoviesContext dbContext;
   public MovieService(MoviesContext dbContext)
@@ -24,13 +29,31 @@ public class MovieService : IDatabaseService<Movie, int>
     Movie? vote = dbContext.Movies.FirstOrDefault(s => s.Id == id);
     if (vote == null) return null;
     dbContext.Movies.Remove(vote);
+    vote.VotesNavigation = null;
     dbContext.SaveChanges();
     return vote;
   }
 
   public List<Movie> GetAll()
   {
-    return dbContext.Movies.ToList();
+    return (
+      from m in dbContext.Movies
+      select new Movie
+      {
+        Id = m.Id,
+        Title = m.Title,
+        ReleaseDate = m.ReleaseDate,
+        Duration = m.Duration,
+        Director = m.Director,
+        Actors = m.Actors,
+        Plot = m.Plot,
+        Rating = m.Rating,
+        Votes = m.Votes,
+        PosterUrl = m.PosterUrl,
+        ImdbId = m.ImdbId,
+        VotesNavigation = null
+      }
+    ).ToList();
   }
 
   public Movie? GetOne(int id)
@@ -50,13 +73,14 @@ public class MovieService : IDatabaseService<Movie, int>
                       Rating = m.Rating,
                       Votes = m.Votes,
                       PosterUrl = m.PosterUrl,
-                      ImdbId = m.ImdbId
+                      ImdbId = m.ImdbId,
+                      VotesNavigation = null
                     }
                 ).First();
-    if(movie == null) return null;
-    movie.VotesNavigation = dbContext.Votes.Where(vt => vt.MoviesId == movie.Id).Select(x => x).ToList();
-    movie.Votes = movie.VotesNavigation.Count();
-    movie.Rating = (movie.Votes > 0) ? (decimal)movie.VotesNavigation.Select(x => x.Rate).Average() : 0;
+    if (movie == null) return null;
+    List<Vote> votes =  dbContext.Votes.Where(vt => vt.MoviesId == movie.Id).Select(x => x).ToList();
+    movie.Votes = votes.Count();
+    movie.Rating = (movie.Votes > 0) ? (decimal)votes.Select(x => x.Rate).Average() : 0;
     return movie;
   }
 
