@@ -6,6 +6,7 @@ builder.Services.AddSingleton<ICategoriesService, CategoriesService>();
 builder.Services.AddSingleton<IMoviesService, MoviesService>();
 builder.Services.AddSingleton<IPersonalInformationsService, PersonalInformationsService>();
 builder.Services.AddSingleton<IVotesService, VotesService>();
+builder.Services.AddSingleton<IGeographicService, GeographicService>();
 
 var app = builder.Build();
 

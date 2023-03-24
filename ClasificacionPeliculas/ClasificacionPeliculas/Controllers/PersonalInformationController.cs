@@ -9,13 +9,13 @@ namespace ClasificacionPeliculas.Controllers
 {
   public class PersonalInformationController : Controller
   {
-    private readonly MoviesContext _context;
     private readonly IPersonalInformationsService ps;
+    private readonly IGeographicService gs;
 
-    public PersonalInformationController(IPersonalInformationsService ps)
+    public PersonalInformationController(IPersonalInformationsService ps, IGeographicService gs)
     {
       this.ps = ps;
-      _context = new MoviesContext();
+      this.gs = gs;
     }
 
     // GET: PersonalInformations
@@ -28,7 +28,6 @@ namespace ClasificacionPeliculas.Controllers
     // GET: PersonalInformation/Details/5
     public async Task<IActionResult> Details(int? id)
     {
-      if (id == null || _context.PersonalInformations == null) return NotFound();
       var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
       return View(personalInformations);
@@ -37,8 +36,8 @@ namespace ClasificacionPeliculas.Controllers
     // GET: PersonalInformation/Create
     public async Task<IActionResult> Create()
     {
-      List<Region> regions = GetRegions();
-      List<City> cities = (List<City>)GetCitiesFromRegion(regions[0].Geonameid).Value;
+      List<Region> regions = await GetRegions();
+      List<City> cities = (List<City>) (await GetCitiesFromRegion(regions[0].Geonameid)).Value;
       ViewBag.regions = new SelectList(regions, "Geonameid", "Name", regions.Select(s => s.Geonameid).FirstOrDefault());
       ViewBag.cities = new SelectList(cities, "Geonameid", "Name", cities.Select(s => s.Geonameid).FirstOrDefault());
       return View();
@@ -60,16 +59,15 @@ namespace ClasificacionPeliculas.Controllers
     // GET: PersonalInformation/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
-      if (id == null || _context.PersonalInformations == null) return NotFound();
       var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
 
-      List<Region> regions = GetRegions();
+      List<Region> regions = await GetRegions();
       SelectList regionsList = new SelectList(regions, "Geonameid", "Name", regions.Select(s => s.Geonameid).FirstOrDefault());
       regionsList.Where(x => x.Value == personalInformations.GeonameidCityNavigation.GeonameidRegion.ToString()).First().Selected = true;
       ViewBag.regions = regionsList;
 
-      List<City> cities = (List<City>)GetCitiesFromRegion(personalInformations.GeonameidCityNavigation.GeonameidRegion).Value;
+      List<City> cities = (List<City>) (await GetCitiesFromRegion(personalInformations.GeonameidCityNavigation.GeonameidRegion)).Value;
       ViewBag.cities = new SelectList(cities, "Geonameid", "Name", cities.Select(s => s.Geonameid).FirstOrDefault());
 
       return View(personalInformations);
@@ -89,7 +87,6 @@ namespace ClasificacionPeliculas.Controllers
     // GET: PersonalInformation/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
-      if (id == null || _context.PersonalInformations == null) return NotFound();
       var personalInformations = await GetPersonalInformationWithCity(id);
       if (personalInformations == null) return NotFound();
       return View(personalInformations);
@@ -100,27 +97,13 @@ namespace ClasificacionPeliculas.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-      if (_context.PersonalInformations == null)
-        return Problem("Entity set 'MoviesContext.PersonalInformations'  is null.");
-
-      var personalInformations = await _context.PersonalInformations.FindAsync(id);
-      if (personalInformations != null) _context.PersonalInformations.Remove(personalInformations);
-      await _context.SaveChangesAsync();
+      await ps.DeletePersonalInformation(id);
       return RedirectToAction(nameof(Index));
     }
 
-    private List<Region> GetRegions()
+    private async Task<List<Region>> GetRegions()
     {
-      return (
-        from r in _context.Regions
-        select new Region
-        {
-          Geonameid = r.Geonameid,
-          Name = r.Name
-        }
-      )
-      .OrderBy(r => r.Name)
-      .ToList();
+      return (await gs.GetRegions()).ToList();
     }
 
     private async Task<PersonalInformation> GetPersonalInformationWithCity(int? id)
@@ -131,20 +114,9 @@ namespace ClasificacionPeliculas.Controllers
 
     // AUX ------------------------------------------------------------------------
 
-    public JsonResult GetCitiesFromRegion(long regionID)
+    public async Task<JsonResult> GetCitiesFromRegion(long regionID)
     {
-      List<City> cities = (
-        from c in _context.Cities
-        where c.GeonameidRegion == regionID
-        select new City
-        {
-          Geonameid = c.Geonameid,
-          Name = c.Name
-        }
-      )
-      .OrderBy(r => r.Name)
-      .ToList();
-      return Json(cities);
+      return Json((await gs.GetCitiesFromRegion((int)regionID)).ToList());
     }
   }
 }
