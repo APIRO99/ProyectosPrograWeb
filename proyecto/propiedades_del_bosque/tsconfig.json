@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
+    // MUI
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+
     "target": "es5",
+    // Paths
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
     "baseUrl": ".",
+    // Others
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -26,3 +33,5 @@
   ],
   "extends": "./tsconfig.paths.json"
 }
+
+
