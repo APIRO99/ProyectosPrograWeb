@@ -104,7 +104,7 @@ const background: TypeBackground = {
 
 const text: TypeText = {
     primary: '#212121',
-    secondary: '#565656',
+    secondary: '#ab9090',
     disabled: 'rgba(79, 79, 79, 0.83)'
 }
 

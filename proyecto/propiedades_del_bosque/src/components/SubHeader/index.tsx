@@ -9,7 +9,7 @@ interface SubHeaderProps {
 
 const SubHeader = ({backgroundOpacity =1 }: SubHeaderProps) =>{
   return (
-    <AppBar position="static" sx={{ height:'70px', justifyContent: 'center', opacity: { backgroundOpacity }, background: '#FFFFFF90' }}>
+    <AppBar position="static" sx={{ height:'70px', justifyContent: 'center', opacity: { backgroundOpacity }}}>
       <Toolbar>
         <div style={{ flexGrow: 1, display: 'flex' }}>
         </div>

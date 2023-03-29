@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  database:
+    image: mysql
+    # restart: always
+    environment:
+      MYSQL_DATABASE: 'propiedadesDelBosque'
+      MYSQL_USER: 'DockerUser'
+      MYSQL_PASSWORD: 'lksafhwaoeihf'
+      MYSQL_ROOT_PASSWORD: 'slkhfdlaiwehfiluawuwahef'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mySQLProyecto:/var/lib/mysql
+
+volumes:
+  mySQLProyecto:
