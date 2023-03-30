@@ -15,3 +15,14 @@ export const GET_PROPERTIES = '@properties/GET_PROPERTIES';
 export const ADD_PROPERTY = '@properties/ADD_PROPERTY';
 export const UPDATE_PROPERTY = '@properties/UPDATE_PROPERTY';
 export const DELETE_PROPERTY = '@properties/DELETE_PROPERTY';
+
+// action - Users reducer
+export const POPULATE_USERS = '@users/POPULATE_USERS';
+export const PUT_UPDATE_USERS = '@users/PUT_UPDATE_USERS';
+export const POST_CREATE_USERS = '@users/POST_CREATE_USERS';
+export const DELETE_DELETE_USERS = '@users/DELETE_DELETE_USERS';
+
+export const GET_USERS = '@users/GET_USERS';
+export const ADD_USER = '@users/ADD_USER';
+export const UPDATE_USER = '@users/UPDATE_USER';
+export const DELETE_USER = '@users/DELETE_USER';

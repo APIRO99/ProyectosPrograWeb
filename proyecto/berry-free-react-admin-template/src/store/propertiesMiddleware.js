@@ -8,11 +8,11 @@ import {
     ADD_PROPERTY
 } from './actions';
 
-export const fetchPropertiesMiddleware =
+export const propertiesMiddleware =
     ({ dispatch }) =>
     (next) =>
     (action) => {
-        console.log('fetchPropertiesMiddleware', action);
+        console.log('propertiesMiddleware', action);
         if (action.type === POPULATE_PROPERTIES) {
             fetch('http://localhost:5182/property')
                 .then((response) => response.json())

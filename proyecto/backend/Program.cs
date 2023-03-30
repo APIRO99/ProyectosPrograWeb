@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddCors();
 
 var app = builder.Build();
