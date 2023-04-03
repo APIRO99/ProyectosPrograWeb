@@ -40,7 +40,7 @@ type Props = {
 
 const HorizonUI = ({ children }: Props) => {
 	return (
-		<ChakraProvider theme={theme}>t
+		<ChakraProvider theme={theme}>
 			{ children }
 		</ChakraProvider>
 	);
