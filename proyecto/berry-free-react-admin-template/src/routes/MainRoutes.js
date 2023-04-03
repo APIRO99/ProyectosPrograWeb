@@ -10,6 +10,9 @@ const DashboardDefault = Loadable(lazy(() => import('defaultViews/dashboard/Defa
 // Property routing
 const PropertyDefault = Loadable(lazy(() => import('views/manageProperites')));
 
+// Users Routring
+const UsersDefault = Loadable(lazy(() => import('views/manageUsers')));
+
 // utilities routing
 const UtilsTypography = Loadable(lazy(() => import('defaultViews/utilities/Typography')));
 const UtilsColor = Loadable(lazy(() => import('defaultViews/utilities/Color')));
@@ -33,6 +36,10 @@ const MainRoutes = {
         {
             path: 'properties',
             element: <PropertyDefault />
+        },
+        {
+            path: 'users',
+            element: <UsersDefault />
         },
         {
             path: 'dashboard',

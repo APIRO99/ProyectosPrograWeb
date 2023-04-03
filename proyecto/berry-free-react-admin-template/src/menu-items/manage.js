@@ -1,13 +1,10 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill, IconHome } from '@tabler/icons';
+import { IconHome, IconUser } from '@tabler/icons';
 
 // constant
 const icons = {
-    IconTypography,
-    IconPalette,
-    IconShadow,
-    IconWindmill,
-    IconHome
+    IconHome,
+    IconUser
 };
 
 // ==============================|| Manage MENU ITEMS ||============================== //
@@ -23,6 +20,14 @@ const manage = {
             type: 'item',
             url: '/properties',
             icon: icons.IconHome,
+            breadcrumbs: false
+        },
+        {
+            id: 'users',
+            title: 'Users',
+            type: 'item',
+            url: '/users',
+            icon: icons.IconUser,
             breadcrumbs: false
         }
     ]
