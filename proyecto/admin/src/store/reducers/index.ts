@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 
 // reducer import
-// import customizationReducer from './customizationReducer';
+import sessionReducer from './sessionReducer';
 // import propertiesReducer from './PropertiesReducer';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
 const reducer = combineReducers({
-    // customization: customizationReducer,
-    // properties: propertiesReducer
+  session: sessionReducer
+  // properties: propertiesReducer
 });
 
 export default reducer;

@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { useTypedSelector, useTypedDispatch } from 'store/hooks';
+
 // Chakra Imports
 import {
 	Avatar,
@@ -20,28 +23,36 @@ import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
 // Assets
-import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
-import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes/routes';
+
+
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
+
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const textColorBrand = useColorModeValue('brand.700', 'brand.400');
-	const ethColor = useColorModeValue('gray.700', 'white');
 	const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
-	const ethBg = useColorModeValue('secondaryGray.300', 'navy.900');
-	const ethBox = useColorModeValue('white', 'navy.800');
 	const shadow = useColorModeValue(
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
-	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+
+	const [session, setSession] = useState<ISession | null>(null);
+
+	const globalSession = useTypedSelector(state => state.session.session);
+	const dispatch = useTypedDispatch();
+
+	useEffect(() => {
+		setSession(globalSession);
+	}, [globalSession])
+	
+	// return (session === null) ? (<div>loading</div>) : 
 	return (
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
@@ -52,6 +63,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 			p='10px'
 			borderRadius='30px'
 			boxShadow={shadow}>
+				
 			<SearchBar
 				mb={() => {
 					if (secondary) {
@@ -62,25 +74,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 				me='10px'
 				borderRadius='30px'
 			/>
-			<Flex
-				bg={ethBg}
-				display={secondary ? 'flex' : 'none'}
-				borderRadius='30px'
-				ms='auto'
-				p='6px'
-				align='center'
-				me='6px'>
-				<Flex align='center' justify='center' bg={ethBox} h='29px' w='29px' borderRadius='30px' me='7px'>
-					<Icon color={ethColor} w='9px' h='14px' as={FaEthereum} />
-				</Flex>
-				<Text w='max-content' color={ethColor} fontSize='sm' fontWeight='700' me='6px'>
-					1,924
-					<Text as='span' display={{ base: 'none', md: 'unset' }}>
-						{' '}
-						ETH
-					</Text>
-				</Text>
-			</Flex>
 			<SidebarResponsive routes={routes} />
 			<Menu>
 				<MenuButton p='0px'>
@@ -115,47 +108,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 				</MenuList>
 			</Menu>
 
-			<Menu>
-				<MenuButton p='0px'>
-					<Icon mt='6px' as={MdInfoOutline} color={navbarIcon} w='18px' h='18px' me='10px' />
-				</MenuButton>
-				<MenuList
-					boxShadow={shadow}
-					p='20px'
-					me={{ base: '30px', md: 'unset' }}
-					borderRadius='20px'
-					bg={menuBg}
-					border='none'
-					mt='22px'
-					minW={{ base: 'unset' }}
-					maxW={{ base: '360px', md: 'unset' }}>
-					<Image src={navImage} borderRadius='16px' mb='28px' />
-					<Flex flexDirection='column'>
-						<Link w='100%' href='https://horizon-ui.com/pro'>
-							<Button w='100%' h='44px' mb='10px' variant='brand'>
-								Buy Horizon UI PRO
-							</Button>
-						</Link>
-						<Link w='100%' href='https://horizon-ui.com/documentation/docs/introduction'>
-							<Button
-								w='100%'
-								h='44px'
-								mb='10px'
-								border='1px solid'
-								bg='transparent'
-								borderColor={borderButton}>
-								See Documentation
-							</Button>
-						</Link>
-						<Link w='100%' href='https://github.com/horizon-ui/horizon-ui-chakra-ts'>
-							<Button w='100%' h='44px' variant='no-hover' color={textColor} bg='transparent'>
-								Try Horizon Free
-							</Button>
-						</Link>
-					</Flex>
-				</MenuList>
-			</Menu>
-
 			<Button
 				variant='no-hover'
 				bg='transparent'
@@ -173,12 +125,13 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 					as={colorMode === 'light' ? IoMdMoon : IoMdSunny}
 				/>
 			</Button>
+			
 			<Menu>
 				<MenuButton p='0px'>
 					<Avatar
 						_hover={{ cursor: 'pointer' }}
 						color='white'
-						name='Adela Parkson'
+						name={session?.name}
 						bg='#11047A'
 						size='sm'
 						w='40px'
@@ -197,15 +150,12 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, {session?.user} :)
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius='8px' px='14px'>
 							<Text fontSize='sm'>Profile Settings</Text>
-						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius='8px' px='14px'>
-							<Text fontSize='sm'>Newsletter Settings</Text>
 						</MenuItem>
 						<MenuItem
 							_hover={{ bg: 'none' }}
