@@ -6,6 +6,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UsersController : ControllerBase
 {
     private readonly IUserService UserService;
