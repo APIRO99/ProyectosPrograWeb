@@ -1,20 +1,19 @@
-import Admin from 'layouts/admin'
 import {
   createBrowserRouter,
+  RouteObject,
   RouterProvider,
 } from "react-router-dom";
+import routes from "routes/routes";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Admin />,
-  },
-]);
+const router = createBrowserRouter(
+  routes.map<RouteObject>((route): RouteObject => {
+    return {
+      path: route.layout + route.path,
+      element: route.component(),
+    };
+  })
+);
 
-function Router() {
-  return (
-      <RouterProvider router={router} />
-  );
-}
+const Router = () => <RouterProvider router={router} />;
 
 export default Router;

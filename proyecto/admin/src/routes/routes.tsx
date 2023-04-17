@@ -1,4 +1,6 @@
 import { Icon } from '@chakra-ui/react';
+import Admin from 'layouts/admin';
+import Auth from 'layouts/auth';
 import { MdBarChart, MdPerson, MdHome, MdLock, MdOutlineShoppingCart } from 'react-icons/md';
 
 // Admin Imports
@@ -11,19 +13,21 @@ import { MdBarChart, MdPerson, MdHome, MdLock, MdOutlineShoppingCart } from 'rea
 // Auth Imports
 // import SignInCentered from 'views/auth/signIn';
 
-const Temp = () => {
-  return <div>Temp</div>;
-};
-
-
 const routes: RoutesType[] = [
+  {
+    name: 'Login Page',
+    layout: '/auth',
+    path: '/',
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: () => <Auth />
+  },
   {
     name: 'Main Dashboard',
     layout: '/admin',
-    path: '/default',
+    path: '/',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: Temp
-  }
+    component: () => <Admin />
+  },
   // {
   // 	name: 'Main Dashboard',
   // 	layout: '/admin',
