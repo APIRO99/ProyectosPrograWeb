@@ -49,6 +49,7 @@ import { RiEyeCloseLine } from "react-icons/ri";
 
 import { useTypedSelector, useTypedDispatch } from "store/hooks";
 import { SESSION_LOGIN } from "store/actions";
+import { thunkLogin } from "store/thunk/Session";
 
 
 function SignIn() {
@@ -84,7 +85,8 @@ function SignIn() {
   }
 
   const handleLogin = (ev: React.MouseEvent<HTMLButtonElement>): MouseEventHandler<HTMLButtonElement> => {
-    dispatch({ type: SESSION_LOGIN, payload: { email, password } });
+    console.log("Called LOGIN API");
+    dispatch(thunkLogin({email, password, keepSesion: false}));
     return;
   }
 

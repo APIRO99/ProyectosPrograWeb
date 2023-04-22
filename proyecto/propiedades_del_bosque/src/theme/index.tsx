@@ -11,9 +11,11 @@ export const getTheme = (mode: string): Theme => {
 export const CustomThemeProvider = ({ children }: any) => {
   const theme = useMemo(() => getTheme("light"), []);
   return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <>
+      {/* // <ThemeProvider theme={theme}> */}
+        {/* // <CssBaseline /> */}
         {children}
-      </ThemeProvider>
+      {/* // </ThemeProvider> */}
+    </>
   );
 };

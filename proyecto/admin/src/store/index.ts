@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './reducers';
-// import { fetchPropertiesMiddleware } from './Middleware';
+import thunk from 'redux-thunk'
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
-// const store = configureStore({ reducer, middleware: [fetchPropertiesMiddleware] });
-const store = configureStore({ reducer });
+const store = configureStore({
+  reducer, middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: "https://localhost:3000"
+      }
+    })
+});
 
 export { store };
 

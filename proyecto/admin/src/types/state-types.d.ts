@@ -14,4 +14,10 @@ declare global {
 		name: string;
 		token: string;
 	}
+
+	interface ILoginData {
+		email: string;
+		password: string;
+		keepSesion: boolean;
+	}
 }
