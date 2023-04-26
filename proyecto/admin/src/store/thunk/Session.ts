@@ -8,9 +8,9 @@ export const thunkLogin =
     async dispatch => {
       loginCall(credentials)
         .then(data => ({
-          name: "Andres Pineda",
+          name: data.name,
           username: credentials.username,
-          email: "APIRO99@OUTLOOK.COM",
+          email: data.email,
           token: data.token,
         }))
         .then(session => dispatch({ type: SESSION_LOGIN, payload: session }))
@@ -26,5 +26,6 @@ const loginCall = async ({ username, password }: ILoginData): Promise<ILoginResp
     },
     body: JSON.stringify({ username, password }),
   });
+  if (!response.ok) throw new Error( (await response.json()).message);
   return response.json();
 }

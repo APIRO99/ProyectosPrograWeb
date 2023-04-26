@@ -1,96 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, FormControl, FormLabel, Image, Input } from '@chakra-ui/react';
-import { Field } from 'formik';
+import { useRef, useState, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from 'react-three-fiber';
+import { Box, Box as Box3D } from '@react-three/drei';
+import THREE, { Mesh } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-interface IProps {
-  photo: string;
-  name: string;
-  label: string;
-}
-
-const ModelSelector = (props: IProps) => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const fileInputRef = useRef(null);
-
-  useEffect(() => {
-    if (props.photo) {
-      createFileFromUrl(props.photo, 'property-image')
-        .then((file) => setSelectedImage(file));
-    }
-  }, [props.photo]);
-
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    setSelectedImage(selectedFile || null);
-  };
-  const handleClick = () => {
-    fileInputRef.current.click();
-  };
-
+function Model({ gltf }: { gltf: any }) {
+  if (!gltf) return (<></>);
+  console.log(gltf);
   return (
-    <>
-      {/* <Field
-        id="image"
-        name="image"
-        type="file"
-        onChange={(event: any) => {
-          setSelectedImage(event.currentTarget.files[0]);
-        }}
+    <mesh>
+      <primitive 
+        object={gltf.scene} 
+        scale={[0.4,0.4,0.4]}
+        position={[0, -1, 0]}
       />
-      {selectedImage &&
-        <Image src={URL.createObjectURL(selectedImage)} alt="Property Image" w='382px' h='215px' mx='auto' borderRadius='15px' />
-      }
-      <button type="submit">Upload</button> */}
-      <Field 
-        name='image' 
-        type='file' 
-        validate={(value: string) => (value) ? "" : "This field is required"}
-      >
-        {
-          ({ field, form }: { field: any, form: any }) => (
-            <FormControl 
-              isInvalid={false}  {...props} 
-              my='5px'
-            >
-              <FormLabel htmlFor={props.name}>{props.label}</FormLabel>
-              { selectedImage && <Image src={URL.createObjectURL(selectedImage)} alt="Property Image" w='382px' h='215px' mx='auto' borderRadius='15px' objectFit='cover'/> }
-              <Box mt='15px' display='flex' flexDir='row-reverse'>
-                <Button onClick={handleClick} me='40px' >Select File</Button>
-                <FormLabel htmlFor="image"></FormLabel>
-                <Input
-                  // {...field}
-                  id={props.name}
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={(ev: any) => {
-                    handleImageSelect(ev);
-                    form.setFieldValue('image', ev.currentTarget.files[0]);
-                  }}
-                display="none"
-                />
-              </Box>
-            </FormControl>
-          )
-        }
-      </Field>
-
-      {/* <FormControl id='image'>
-        <Field
-          name="image"
-          type="file"
-          onChange={handleImageSelect}
-        />
-        <button type="submit">Upload</button>
-      </FormControl> */}
-    </>
-
+    </mesh>
   );
 }
 
-async function createFileFromUrl(url: string, filename: string): Promise<File> {
-  const response = await fetch(url);
-  const blob = await response.blob();
-  return new File([blob], filename);
+
+const PropertyModel = () => {
+  const [rotation, setRotation] = useState<[number, number, number]>([0, 0, 0]);
+  const [model, setModel] = useState(null);
+  const boxRef = useRef<Mesh>();
+  const { camera } = useThree();
+  const loader = new GLTFLoader();
+
+  useFrame(() => {
+    if (boxRef.current) {
+      setRotation([rotation[0], rotation[1] + 0.004, rotation[2]]);
+      boxRef.current.rotation.set(...rotation);
+    }
+  });
+  useEffect(() => {
+    camera.position.set(0, 3, 4);
+    camera.lookAt(0, 0, 0);
+    // loader.load('/assets/models/modernHouse/house.gltf', (gltf) => {
+    loader.load('/assets/models/ISR1.glb', (gltf) => {
+      setModel(gltf);
+    });
+  }, []);
+
+  return (
+    <>
+      <mesh ref={boxRef}>
+        <Model gltf={model} />
+      </mesh>
+    </>
+  );
 }
 
-export default ModelSelector;
+
+const Wrapper = () => {
+  return (
+    <Canvas style={{ width: "100%", height: '400px' }}>
+      <ambientLight />
+      <pointLight position={[10, 10, 10]} />
+      <PropertyModel />
+    </Canvas>
+  )
+}
+
+export default Wrapper;

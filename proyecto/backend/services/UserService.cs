@@ -1,18 +1,25 @@
 
 using backend.Context;
 using backend.Models;
+using backend.Utils;
 
 namespace backend.Services;
 
-public interface IUserService: IBaseCrud<User, int> { }
+public interface IUserService: IBaseCrud<User, int> { 
+  public User? GetOneByUsername(string username);
+}
 
 public class UserService : IUserService
 {
   private readonly PropiedadesDelBosqueContext dbContext = new PropiedadesDelBosqueContext();
 
+  private readonly IEncode encode;
+  public UserService(IEncode _encode) => this.encode = _encode;
+
   public User Create(User entity)
   {
     entity.CreatedAt = DateTime.Now;
+    entity.Password = encode.Encriptar(entity.Password);
     dbContext.Users.Add(entity);
     dbContext.SaveChanges();
     return entity;
@@ -29,7 +36,17 @@ public class UserService : IUserService
 
   public List<User> GetAll()
   {
-    return dbContext.Users.ToList();
+    return (
+      from c in dbContext.Users
+      select new User() {
+        Id = c.Id,
+        Username = c.Username,
+        Name = c.Name,
+        Email = c.Email,
+        Password = encode.Desencriptar(c.Password),
+        CreatedAt = c.CreatedAt,
+      }
+    ).ToList();
   }
 
   public User? GetOne(int id)
@@ -37,6 +54,21 @@ public class UserService : IUserService
     return (
       from c in dbContext.Users
       where c.Id == id
+      select new User() {
+        Id = c.Id,
+        Name = c.Name,
+        Email = c.Email,
+        Password = encode.Desencriptar(c.Password),
+        CreatedAt = c.CreatedAt,
+      }
+    ).FirstOrDefault();
+  }
+
+  public User? GetOneByUsername(string username)
+  {
+    return (
+      from c in dbContext.Users
+      where c.Username == username
       select new User() {
         Id = c.Id,
         Name = c.Name,
@@ -53,9 +85,11 @@ public class UserService : IUserService
     if (User == null) return null;
     User.Name = entity.Name;
     User.Email = entity.Email;
-    User.Password = entity.Password;
+    User.Password = encode.Encriptar(entity.Password);
     User.Username = entity.Username;
     dbContext.SaveChanges();
+
+    User.Password = encode.Desencriptar(User.Password);
     return User;
   }
 }

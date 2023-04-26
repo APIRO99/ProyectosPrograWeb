@@ -8,6 +8,8 @@ declare global {
   interface ILoginResponse {
     token: string;
     expiration: Date;
+    name: string;
+    email: string;
   }
 
   // ==============================|| USERS ||============================== //

@@ -1,5 +1,6 @@
 using System.Text;
 using backend.Services;
+using backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEncode, AES256>();
 builder.Services.AddCors();
 
 builder.Services.Configure<ForwardedHeadersOptions>(option =>

@@ -5,9 +5,10 @@ import Footer from 'components/footer/FooterAdmin';
 import Navbar from 'components/navbar/NavbarAdmin';
 import Sidebar from 'components/sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
-import { useState } from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import routes from 'routes/routes';
+import { useTypedSelector } from 'store/hooks';
 
 // Custom Chakra theme
 export default function Dashboard() {
@@ -15,6 +16,19 @@ export default function Dashboard() {
 	const [fixed] = useState(false);
 	const [toggleSidebar, setToggleSidebar] = useState(false);
 	// functions for changing the states from components
+	const navigate = useNavigate();
+  const session = useTypedSelector<ISession>((state) => state.session);
+
+  useEffect(() => {
+    if (session.name) {
+      console.log('logged in');
+      navigate('/admin');
+    }
+    else {
+      console.log('no session');
+      navigate('/auth');
+    }
+  }, [session.name])
 	const getActiveRoute = (routes: RoutesType[]): string => {
 		let activeRoute = 'Default Brand Text';
 		for (let i = 0; i < routes.length; i++) {
@@ -51,7 +65,10 @@ export default function Dashboard() {
 					toggleSidebar,
 					setToggleSidebar
 				}}>
-				<Sidebar routes={routes} display='none' />
+				<Sidebar 
+					routes={routes.filter((route) => route.layout === '/admin')} 
+					display='none' 
+				/>
 				<Box
 					float='right'
 					minHeight='100vh'

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useTypedDispatch } from "store/hooks";
 import { thunkCreateProperty, thunkUpdateProperty } from "store/thunk/Properties";
 import ImageSelector from "./ImageSelector";
+import ModelSelector from "./ModelSelector";
 
 interface FormInterface {
   isOpen: boolean;
@@ -61,17 +62,17 @@ const DataForm = (props: IDataFormProps) => {
   const { id, name, address, baths, beds, city, state, status, weekRent, photo, model } = props;
   const { handleDelete, onClose, editProperty } = props;
   const initialValues: IFormData = {
-    name, 
-    address, 
-    baths, 
-    beds, 
-    city, 
-    state, 
-    status, 
-    weekRent, 
-    photo, 
-    model, 
-    image: null 
+    name,
+    address,
+    baths,
+    beds,
+    city,
+    state,
+    status,
+    weekRent,
+    photo,
+    model,
+    image: null
   };
   const deleteProperty = (id: number): void => {
     handleDelete(id);
@@ -113,7 +114,7 @@ const DataForm = (props: IDataFormProps) => {
               <MyField label="beds" name="beds" type='number' />
             </Box>
             <Box flex='1' ml='10px'>
-              <ImageSelector photo={process.env.REACT_APP_STATIC_FILES_URL + photo} name="image" label="image"/>
+              <ImageSelector photo={process.env.REACT_APP_STATIC_FILES_URL + photo} name="image" label="image" />
             </Box>
           </Box>
 
@@ -123,9 +124,11 @@ const DataForm = (props: IDataFormProps) => {
           </Box>
           <Box display='flex' justifyContent='space-between'>
             <MyField label="status" name="status" mx='10px' />
-            <MyField label="weekRent" name="weekRent" mx='10px' />
+            <MyField label="weekRent" name="weekRent" mx='10px' type='number' />
           </Box>
           <MyField label="model" name="model" />
+          <MyField label="model" name="model" />
+          {/* <ModelSelector /> */}
           <Button
             mt={4}
             colorScheme="brand"
@@ -142,6 +145,7 @@ const DataForm = (props: IDataFormProps) => {
                 isLoading={props.isSubmitting}
                 type="button"
                 onClick={() => deleteProperty(id)}
+                ml='20px'
               >
                 Delete
               </Button>
@@ -157,25 +161,14 @@ const PropertyForm = (props: FormInterface) => {
   const { isOpen, onClose, editProperty, propertyData, title, handleDelete } = props;
   return (
     <>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered size='6xl'>
+      <Modal onClose={onClose} isOpen={isOpen} size='6xl'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <DataForm
-              id={propertyData?.id}
-              name={propertyData?.name}
-              address={propertyData?.address}
-              baths={propertyData?.baths}
-              beds={propertyData?.beds}
-              city={propertyData?.city}
-              state={propertyData?.state}
-              status={propertyData?.status}
-              weekRent={propertyData?.weekRent}
-              photo={propertyData?.photo}
-              model={propertyData?.model}
-
+              {...propertyData}
               editProperty={editProperty}
               onClose={onClose}
               handleDelete={handleDelete}
