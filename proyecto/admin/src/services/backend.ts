@@ -77,7 +77,6 @@ export const GetProperty = async (authToken: string, id: string): Promise<IGetPr
 
 export const CreateProperty = async (authToken: string, property: IProperty): Promise<ICreatePropertyResponse> => {
   const body: any = {
-    id: property.id,
     name: property.name,
     address: property.address,
     city: property.city,

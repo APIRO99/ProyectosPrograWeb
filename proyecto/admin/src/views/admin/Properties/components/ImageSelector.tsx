@@ -31,7 +31,7 @@ const ImageSelector = (props: IProps) => {
     <Field
       name='image'
       type='file'
-      validate={(value: string) => (value) ? "" : "This field is required"}
+      validate={(value: string) => ""}
     >
       {
         ({ field, form }: { field: any, form: any }) => (

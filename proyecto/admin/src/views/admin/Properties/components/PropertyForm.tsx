@@ -82,6 +82,7 @@ const DataForm = (props: IDataFormProps) => {
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
+      
       onSubmit={(values, actions) => {
         let property: IProperty = {
           name: values.name,
