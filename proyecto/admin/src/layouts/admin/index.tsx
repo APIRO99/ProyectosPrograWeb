@@ -6,19 +6,15 @@ import Navbar from 'components/navbar/NavbarAdmin';
 import Sidebar from 'components/sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
 import { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import routes from 'routes/routes';
 
 // Custom Chakra theme
-export default function Dashboard(props: { [x: string]: any }) {
-	const { ...rest } = props;
+export default function Dashboard() {
 	// states and functions
-	const [ fixed ] = useState(false);
-	const [ toggleSidebar, setToggleSidebar ] = useState(false);
+	const [fixed] = useState(false);
+	const [toggleSidebar, setToggleSidebar] = useState(false);
 	// functions for changing the states from components
-	const getRoute = () => {
-		return window.location.pathname !== '/admin/full-screen-maps';
-	};
 	const getActiveRoute = (routes: RoutesType[]): string => {
 		let activeRoute = 'Default Brand Text';
 		for (let i = 0; i < routes.length; i++) {
@@ -46,15 +42,6 @@ export default function Dashboard(props: { [x: string]: any }) {
 		}
 		return activeNavbar;
 	};
-	const getRoutes = (routes: RoutesType[]): any => {
-		return routes.map((route: RoutesType, key: any) => {
-			if (route.layout === '/admin') {
-				return <Route path={route.layout + route.path} element={route.component()} key={key} />;
-			} else {
-				return null;
-			}
-		});
-	};
 	document.documentElement.dir = 'ltr';
 	const { onOpen } = useDisclosure();
 	return (
@@ -64,7 +51,7 @@ export default function Dashboard(props: { [x: string]: any }) {
 					toggleSidebar,
 					setToggleSidebar
 				}}>
-				<Sidebar routes={routes} display='none' {...rest} />
+				<Sidebar routes={routes} display='none' />
 				<Box
 					float='right'
 					minHeight='100vh'
@@ -82,23 +69,17 @@ export default function Dashboard(props: { [x: string]: any }) {
 						<Box>
 							<Navbar
 								onOpen={onOpen}
-								logoText={'Horizon UI Dashboard PRO'}
+								logoText={'APIRO'}
 								brandText={getActiveRoute(routes)}
 								secondary={getActiveNavbar(routes)}
 								message={getActiveNavbarText(routes)}
 								fixed={fixed}
-								{...rest}
 							/>
 						</Box>
 					</Portal>
-
-					{getRoute() ? (
-						<Box mx='auto' p={{ base: '20px', md: '30px' }} pe='20px' minH='100vh' pt='50px'>
-							<Routes>
-								{getRoutes(routes)}
-							</Routes>
-						</Box>
-					) : null}
+					<Box mx='auto' p={{ base: '20px', md: '30px' }} pe='20px' minH='100vh' pt='50px' mt={{base: '120px', md: '70px' }} >
+						<Outlet />
+					</Box>
 					<Box>
 						<Footer />
 					</Box>

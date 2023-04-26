@@ -45,7 +45,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 
 	const [session, setSession] = useState<ISession | null>(null);
 
-	const globalSession = useTypedSelector(state => state.session.session);
+	const globalSession = useTypedSelector(state => state.session);
 	const dispatch = useTypedDispatch();
 
 	useEffect(() => {
@@ -150,7 +150,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Hey, {session?.user} :)
+							👋&nbsp; Hey, {session?.name} :)
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>

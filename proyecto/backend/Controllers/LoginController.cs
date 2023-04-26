@@ -21,7 +21,7 @@ public class LoginController : ControllerBase
   }
 
   [HttpPost("")]
-  public Token GetAllProperties(Token tokenRequest)
+  public Token GetAllProperties(User tokenRequest)
   {
     DateTime expiration = DateTime.Now.AddMinutes(30);
     string applicationName = "CPAPI";

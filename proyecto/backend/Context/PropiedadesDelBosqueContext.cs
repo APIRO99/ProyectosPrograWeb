@@ -54,6 +54,18 @@ public partial class PropiedadesDelBosqueContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
+            entity.Property(e => e.Beds)
+                .HasColumnType("int")
+                .HasColumnName("beds");
+            entity.Property(e => e.Baths)
+                .HasColumnType("int")
+                .HasColumnName("baths");
+            entity.Property(e => e.WeekRent)
+                .HasColumnType("int")
+                .HasColumnName("weekRent");
+            entity.Property(e => e.Model)
+                .HasMaxLength(255)
+                .HasColumnName("model");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -73,6 +85,9 @@ public partial class PropiedadesDelBosqueContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
+            entity.Property(e => e.Username)
+                .HasMaxLength(100)
+                .HasColumnName("username");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .HasColumnName("password");

@@ -58,6 +58,10 @@ public class PropertyService : IPropertyService
     Property.Photo = entity.Photo;
     Property.State = entity.State;
     Property.Status = entity.Status;
+    Property.Beds = entity.Beds;
+    Property.Baths = entity.Baths;
+    Property.WeekRent = entity.WeekRent;
+    Property.Model = entity.Model;
     dbContext.SaveChanges();
     return Property;
   }

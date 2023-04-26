@@ -2,8 +2,11 @@
 import { AnyAction } from 'redux';
 import * as actionTypes from 'store/actions';
 
-const initialState: IState = {
-  session: null
+const initialState: ISession = {
+  username: null,
+  name: null,
+  email: null,
+  token: null
 };
 
 // ==============================|| USERS REDUCER ||============================== //
@@ -13,11 +16,7 @@ const sessionReducer = (state = initialState, action: AnyAction) => {
     case actionTypes.SESSION_LOGIN:
       return {
         ...state,
-        session: {
-          user: 'APIRO',
-          name: 'Andres Pineda',
-          token: 'sadfasdfwaef'
-        }
+        ...action.payload
       };
 
     case actionTypes.SESSION_LOGOUT:

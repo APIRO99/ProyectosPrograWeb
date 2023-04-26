@@ -1,6 +1,8 @@
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace backend.Controllers;
 
@@ -16,7 +18,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("")]
-    public IEnumerable<User> GetAllProperties()
+    public IEnumerable<User> GetAllUsers()
     {
         return UserService.GetAll();
     }

@@ -18,4 +18,12 @@ public partial class Property
     public string Photo { get; set; } = null!;
 
     public string Status { get; set; } = null!;
+
+    public int Beds { get; set; }
+
+    public int Baths { get; set; }
+
+    public int WeekRent { get; set; }
+
+    public string Model { get; set; } = null!;
 }

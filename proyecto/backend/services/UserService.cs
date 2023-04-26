@@ -12,6 +12,7 @@ public class UserService : IUserService
 
   public User Create(User entity)
   {
+    entity.CreatedAt = DateTime.Now;
     dbContext.Users.Add(entity);
     dbContext.SaveChanges();
     return entity;
@@ -53,6 +54,7 @@ public class UserService : IUserService
     User.Name = entity.Name;
     User.Email = entity.Email;
     User.Password = entity.Password;
+    User.Username = entity.Username;
     dbContext.SaveChanges();
     return User;
   }

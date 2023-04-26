@@ -12,26 +12,7 @@ import { SidebarContext } from 'contexts/SidebarContext';
 // Custom Chakra theme
 const Auth = () => {
 	// states and functions
-	const [ toggleSidebar, setToggleSidebar ] = useState(false); 
-	const getRoute = () => {
-		return window.location.pathname !== '/auth/full-screen-maps';
-	};
-	const getRoutes = (
-		routes: RoutesType[]
-	): any => {
-		return routes.map(
-			(
-				route: RoutesType,
-				key: any
-			) => {
-				if (route.layout === '/auth') {
-					return <Route path={route.layout + route.path} element={route.component()} key={key} />;
-				} else {
-					return null;
-				}
-			}
-		);
-	};
+	const [toggleSidebar, setToggleSidebar] = useState(false);
 	const authBg = useColorModeValue('white', 'navy.900');
 	document.documentElement.dir = 'ltr';
 	return (
@@ -52,11 +33,9 @@ const Auth = () => {
 					transitionDuration='.2s, .2s, .35s'
 					transitionProperty='top, bottom, width'
 					transitionTimingFunction='linear, linear, ease'>
-					{getRoute() ? (
-						<Box mx='auto' minH='100vh'>
-							<SignIn />
-						</Box>
-					) : null}
+					<Box mx='auto' minH='100vh'>
+						<SignIn />
+					</Box>
 				</Box>
 			</SidebarContext.Provider>
 		</Box>

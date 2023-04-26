@@ -59,34 +59,35 @@ function SignIn() {
   const brandStars = useColorModeValue("brand.500", "brand.400");
   
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
-  const { session } = useTypedSelector((state) => state.session);
+  const session = useTypedSelector<ISession>((state) => state.session);
 
   useEffect(() => {
-    if (session) {
+    if (session.name) {
       console.log('logged in');
       navigate('/admin');
     }
     else {
       console.log('no session');
+      navigate('/auth');
     }
-  }, [session])
+  }, [session.name])
 
   const handleClick = () => setShow(!show);
 
   const handleChange = (ev: any): MouseEventHandler<HTMLButtonElement> => {
     let { id, value }: { id: string , value:string } = ev.currentTarget;
-    if (id === 'Email') setEmail(value);
+    if (id === 'username') setUsername(value);
     if (id === 'Password') setPassword(value);
     return;
   }
 
   const handleLogin = (ev: React.MouseEvent<HTMLButtonElement>): MouseEventHandler<HTMLButtonElement> => {
     console.log("Called LOGIN API");
-    dispatch(thunkLogin({email, password, keepSesion: false}));
+    dispatch(thunkLogin({username, password, keepSesion: false}));
     return;
   }
 
@@ -123,19 +124,19 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               mb='8px'>
-              Email<Text color={brandStars}>*</Text>
+              Username<Text color={brandStars}>*</Text>
             </FormLabel>
             <Input
               isRequired={true}
               variant='auth'
               fontSize='sm'
               ms={{ base: "0px", md: "0px" }}
-              type='email'
-              placeholder='mail@simmmple.com'
+              type='username'
+              placeholder='test_user22'
               mb='24px'
               fontWeight='500'
               size='lg'
-              id='Email'
+              id='username'
               onChange={handleChange}
             />
             <FormLabel
@@ -235,7 +236,7 @@ const LogInTitle = (props: LogInTitleProps) => {
       color={textColorSecondary}
       fontWeight='400'
       fontSize='md'>
-      Enter your email and password to Log Im!
+      Enter your username and password to Log Im!
     </Text>
   </Box>
   );

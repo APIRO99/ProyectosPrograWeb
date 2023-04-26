@@ -2,6 +2,7 @@ using System.Text;
 using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(option =>
   option.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 );
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
   options.RequireHttpsMetadata = false;
   options.SaveToken = true;
   options.TokenValidationParameters = new TokenValidationParameters()
@@ -44,6 +46,10 @@ app.UseCors(x => x
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions {
+  FileProvider = new PhysicalFileProvider(Path.Combine("C:", "storage")), 
+  RequestPath = "/storage"
+});
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

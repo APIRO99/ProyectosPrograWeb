@@ -9,10 +9,10 @@ namespace backend.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class PropertyController : ControllerBase
+public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService PropertyService;
-    public PropertyController(IPropertyService PropertyService)
+    public PropertiesController(IPropertyService PropertyService)
     {
         this.PropertyService = PropertyService;
     }
@@ -40,6 +40,7 @@ public class PropertyController : ControllerBase
     [HttpPut("")]
     public ActionResult<Property> UpdateProperty(Property Property)
     {
+        
         Property? PropertyUpdated = PropertyService.Update(Property);
         if (PropertyUpdated == null) return NotFound();
         return PropertyUpdated;
