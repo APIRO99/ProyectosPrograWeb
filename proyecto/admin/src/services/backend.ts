@@ -1,9 +1,24 @@
 
-const API_URL = "http://localhost:5182";
+const API_URL = process.env.REACT_APP_STATIC_FILES_URL;
 const buildHeaders = (authToken: string) => ({
   "Content-Type": "application/json",
   "Authorization": `Bearer ${authToken}`
 });
+
+
+// ==============================|| AUTHENTICATION ||============================== //
+
+export const login = async ({ username, password }: ILoginData): Promise<ILoginResponse> => {
+  var response = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) throw new Error( (await response.json()).message);
+  return response.json();
+}
 
 
 // ==============================|| USERS ||============================== //
