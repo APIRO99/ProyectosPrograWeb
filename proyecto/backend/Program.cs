@@ -50,7 +50,11 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions {
   FileProvider = new PhysicalFileProvider(Path.Combine("C:", "storage")), 
-  RequestPath = "/storage"
+  RequestPath = "/storage",
+              OnPrepareResponse = ctx => {
+                ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+                ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+              }
 });
 app.UseAuthentication();
 app.UseAuthorization();

@@ -128,7 +128,6 @@ const DataForm = (props: IDataFormProps) => {
             <MyField label="weekRent" name="weekRent" mx='10px' type='number' />
           </Box>
           <MyField label="model" name="model" />
-          <MyField label="model" name="model" />
           {/* <ModelSelector /> */}
           <Button
             mt={4}
